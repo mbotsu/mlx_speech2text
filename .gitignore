@@ -1,0 +1,8 @@
+__pycache__
+env/*
+*.vtt
+*.json
+*.wav
+*.mp4
+*.mov
+*.jit
