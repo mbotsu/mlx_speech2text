@@ -1,5 +1,7 @@
 ## Abstract
-Transcription for Apple Silicon
+Transcription for Apple Silicon.
+
+Segmentation is performed to divide the sound source into small chunks, a sound source is created by removing silent parts for each chunk, and text is extracted.
 
 ## Install
 ```
@@ -9,13 +11,13 @@ $ mkdir models
 $ curl -L https://github.com/snakers4/silero-vad/raw/master/files/silero_vad.jit -o models/silero_vad.jit 
 ```
 
-## RUN
+## Run
 ```
 // convert to wav 16K
 $ ffmpeg -i input.mp4 -ar 16000 out.wav
 
 // run
-$ python speech2text.py -i out.wav -o track
+$ python speech2text.py -i out.wav -o track -v
 ```
 
 ## References
