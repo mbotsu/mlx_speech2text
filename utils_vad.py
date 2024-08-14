@@ -72,7 +72,7 @@ class OnnxWrapper():
 
         x = torch.cat([self._context, x], dim=1)
         if sr in [8000, 16000]:
-            ort_inputs = {'input': x.numpy(), 'state': self._state.numpy(), 'sr': np.array(sr)}
+            ort_inputs = {'input': x.numpy(), 'state': self._state.numpy(), 'sr': np.array(sr, dtype='int64')}
             ort_outs = self.session.run(None, ort_inputs)
             out, state = ort_outs
             self._state = torch.from_numpy(state)
@@ -132,18 +132,19 @@ class Validator():
 
 def read_audio(path: str,
                sampling_rate: int = 16000):
+    list_backends = torchaudio.list_audio_backends()
+    
+    assert len(list_backends) > 0, 'The list of available backends is empty, please install backend manually. \
+                                    \n Recommendations: \n \tSox (UNIX OS) \n \tSoundfile (Windows OS, UNIX OS) \n \tffmpeg (Windows OS, UNIX OS)'
 
-    sox_backends = set(['sox', 'sox_io'])
-    audio_backends = torchaudio.list_audio_backends()
-
-    if len(sox_backends.intersection(audio_backends)) > 0:
+    try:
         effects = [
             ['channels', '1'],
             ['rate', str(sampling_rate)]
         ]
 
         wav, sr = torchaudio.sox_effects.apply_effects_file(path, effects=effects)
-    else:
+    except:
         wav, sr = torchaudio.load(path)
 
         if wav.size(0) > 1:
@@ -453,7 +454,7 @@ class VADIterator:
 
         if (speech_prob >= self.threshold) and not self.triggered:
             self.triggered = True
-            speech_start = self.current_sample - self.speech_pad_samples - window_size_samples
+            speech_start = max(0, self.current_sample - self.speech_pad_samples - window_size_samples)
             return {'start': int(speech_start) if not return_seconds else round(speech_start / self.sampling_rate, 1)}
 
         if (speech_prob < self.threshold - 0.15) and self.triggered:
