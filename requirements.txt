@@ -1,4 +1,4 @@
 torch==2.0.1
 torchaudio==2.0.2
-mlx-whisper==0.1.0
+mlx-whisper==0.2.0
 numpy==1.26.4
