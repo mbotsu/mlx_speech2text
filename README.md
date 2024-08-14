@@ -7,8 +7,6 @@ Segmentation is performed to divide the sound source into small chunks, a sound 
 ```
 $ git clone https://github.com/mbotsu/mlx_speech2text.git
 $ pip install -r requirements.txt
-$ mkdir models
-$ curl -L https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.jit -o models/silero_vad.jit 
 ```
 
 ## Run

@@ -4,16 +4,12 @@ import argparse
 import mlx_whisper
 from mlx_whisper.transcribe import _format_timestamp
 from writers import get_writer
-import torch
-torch.set_num_threads(1)
-from utils_vad import (
-    init_jit_model,
+from silero_vad import (
+    load_silero_vad,
     get_speech_timestamps,
     read_audio,
     collect_chunks
 )
-
-model = init_jit_model(os.path.join('models', 'silero_vad.jit'))
 
 pre_speech_pad_frames = 2
 post_speech_pad_frames = 2
@@ -21,7 +17,7 @@ SAMPLING_RATE = 16000
 
 def main(speech_file, output_dir, language, verbose, write_file="out"):
     wav = read_audio(speech_file, sampling_rate=SAMPLING_RATE)
-
+    model = load_silero_vad()
     speech_timestamps = get_speech_timestamps(wav, model,
                                             sampling_rate=SAMPLING_RATE,
                                             return_seconds=False,

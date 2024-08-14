@@ -1,3 +1,4 @@
+silero-vad==5.1
 torch==2.0.1
 torchaudio==2.0.2
 mlx-whisper==0.2.0
