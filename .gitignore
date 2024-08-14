@@ -6,3 +6,5 @@ env/*
 *.mp4
 *.mov
 *.jit
+.DS_Store
+.mise.toml
