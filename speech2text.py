@@ -11,9 +11,8 @@ from silero_vad import (
     collect_chunks
 )
 
-pre_speech_pad_frames = 2
-post_speech_pad_frames = 2
 SAMPLING_RATE = 16000
+WHISPER_MODEL='mlx-community/whisper-large-v3-turbo'
 
 def main(speech_file, output_dir, language, verbose, write_file="out"):
     wav = read_audio(speech_file, sampling_rate=SAMPLING_RATE)
@@ -37,11 +36,11 @@ def main(speech_file, output_dir, language, verbose, write_file="out"):
 
     wav_length = len(wav)
     for seek in speech_timestamps:
-        seek_start = seek['start'] - pre_speech_pad_frames
+        seek_start = seek['start']
         if seek_start <= 0:
             seek_start = 0
         
-        seek_end = seek['end'] + post_speech_pad_frames
+        seek_end = seek['end']
         if seek_end >= wav_length:
             seek_end = wav_length
         
@@ -58,9 +57,11 @@ def main(speech_file, output_dir, language, verbose, write_file="out"):
         audio = audio.to('cpu').detach().numpy().copy()
 
         trans = mlx_whisper.transcribe(audio, verbose=False, language=language,
-                                    path_or_hf_repo="mlx-community/whisper-large-v3-mlx", fp16=True)
+                                    path_or_hf_repo=WHISPER_MODEL, fp16=True)
 
         for r in trans['segments']:
+            if r['text'] == "":
+                continue
             res = {
                 'start': start + r['start'],
                 'end': start + r['end'],
