@@ -12,7 +12,7 @@ from silero_vad import (
 )
 
 SAMPLING_RATE = 16000
-WHISPER_MODEL='mlx-community/whisper-large-v3-turbo'
+WHISPER_MODEL='mlx-community/whisper-turbo'
 
 def main(speech_file, output_dir, language, verbose, write_file="out"):
     wav = read_audio(speech_file, sampling_rate=SAMPLING_RATE)
