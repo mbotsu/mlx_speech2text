@@ -57,7 +57,10 @@ def main(speech_file, output_dir, language, verbose, write_file="out"):
         audio = audio.to('cpu').detach().numpy().copy()
 
         trans = mlx_whisper.transcribe(audio, verbose=False, language=language,
-                                    path_or_hf_repo=WHISPER_MODEL, fp16=True)
+                                    path_or_hf_repo=WHISPER_MODEL, fp16=True,
+                                    no_speech_threshold=0.1,
+                                    compression_ratio_threshold=1.4,
+                                    logprob_threshold=-1)
 
         for r in trans['segments']:
             if r['text'] == "":
