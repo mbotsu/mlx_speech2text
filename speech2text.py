@@ -12,9 +12,10 @@ from silero_vad import (
 )
 
 SAMPLING_RATE = 16000
+SPEECH_PAD_MS = 400
 WHISPER_MODEL='mlx-community/whisper-turbo'
 
-def main(speech_file, output_dir, language, verbose, write_file="out"):
+def main(speech_file, output_dir, language, verbose, threshold, write_file="out"):
     wav = read_audio(speech_file, sampling_rate=SAMPLING_RATE)
     model = load_silero_vad()
     speech_timestamps = get_speech_timestamps(wav, model,
@@ -49,6 +50,8 @@ def main(speech_file, output_dir, language, verbose, write_file="out"):
         end = round(seek['end'] / SAMPLING_RATE, 1)
         speech_timestamps2 = get_speech_timestamps(wav_slice, model,
                                                     sampling_rate=SAMPLING_RATE,
+                                                    speech_pad_ms=SPEECH_PAD_MS,
+                                                    threshold=threshold,
                                                     return_seconds=False)
         if len(speech_timestamps2) == 0:
             continue
@@ -91,6 +94,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output', default="track", help='output text folder')
     parser.add_argument('-l', '--language', default="ja", help='language')
     parser.add_argument('-v', '--varbose', action='store_true', help='varbose')
+    parser.add_argument('-t', '--threshold', default=0.5, help='silero-vad threshold')
     args = parser.parse_args()
 
-    main(args.input, args.output, args.language, args.varbose, write_file="out")
+    main(args.input, args.output, args.language, args.varbose, args.threshold, write_file="out")
