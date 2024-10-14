@@ -94,7 +94,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output', default="track", help='output text folder')
     parser.add_argument('-l', '--language', default="ja", help='language')
     parser.add_argument('-v', '--varbose', action='store_true', help='varbose')
-    parser.add_argument('-t', '--threshold', default=0.5, help='silero-vad threshold')
+    parser.add_argument('-t', '--threshold', default=0.5, help='silero-vad threshold', type=float)    
     args = parser.parse_args()
 
     main(args.input, args.output, args.language, args.varbose, args.threshold, write_file="out")
